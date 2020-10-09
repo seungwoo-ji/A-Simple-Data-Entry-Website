@@ -1,0 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+* {
+  box-sizing: border-box;
+}
+body {
+  background: #131417;
+  font-family: "Ubuntu";
+  color: white;
+  display: grid;
+  place-items: center;
+  padding: 2em;
+}
+a {
+  color: white;
+}
