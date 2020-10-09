@@ -6,7 +6,7 @@
  *
  * Name: Seung Woo Ji Student ID: 116376195 Date: October 9, 2020
  *
- * Online (Heroku) Link: ________________________________________________________
+ * Online (Heroku) Link: https://fierce-lake-12446.herokuapp.com/
  *
  ********************************************************************************/
 
