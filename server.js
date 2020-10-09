@@ -38,7 +38,7 @@ app.get("/employees", (req, res) => {
       res.json(emp);
     })
     .catch((err) => {
-      res.json({ message: "err" });
+      res.json({ message: err });
     });
 });
 
@@ -49,7 +49,7 @@ app.get("/managers", (req, res) => {
       res.json(mgr);
     })
     .catch((err) => {
-      res.json({ message: "err" });
+      res.json({ message: err });
     });
 });
 
@@ -60,7 +60,7 @@ app.get("/departments", (req, res) => {
       res.json(dept);
     })
     .catch((err) => {
-      res.json({ message: "err" });
+      res.json({ message: err });
     });
 });
 
@@ -74,5 +74,5 @@ data
     app.listen(HTTP_PORT, onHttpStart);
   })
   .catch((err) => {
-    console.log("Error!: " + err.message);
+    console.log("Error!: " + err);
   });

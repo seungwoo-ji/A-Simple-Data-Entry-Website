@@ -5,25 +5,32 @@ var departments = [];
 
 module.exports.initialize = function () {
   return new Promise((resolve, reject) => {
-    fs.readFile("./data/employees.json", (err, data) => {
-      if (err) {
-        reject("unable to read employees file");
-        return;
+    var error = "";
+
+    try {
+      const emp = fs.readFileSync("./data/employees.json");
+      employees = JSON.parse(emp);
+    } catch (err) {
+      error = "unable to read employees file";
+    }
+
+    // only once the read operation for the employees has completed successfully, repeat the same process for the
+    // departments
+    if (error === "") {
+      try {
+        const dept = fs.readFileSync("./data/departments.json");
+        departments = JSON.parse(dept);
+      } catch (err) {
+        error = "unable to read department file";
       }
+    }
 
-      employees = JSON.parse(data);
-    });
-
-    fs.readFile("./data/departments.json", (err, data) => {
-      if (err) {
-        reject("unable to read departments file");
-        return;
-      }
-
-      departments = JSON.parse(data);
-    });
-
-    resolve();
+    // if there was an error at any time during this process, invoke the reject with an appropriate message
+    if (error === "") {
+      resolve();
+    } else {
+      reject(error);
+    }
   });
 };
 
