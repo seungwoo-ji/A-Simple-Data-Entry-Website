@@ -1,15 +1,49 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu);
-* {
-  box-sizing: border-box;
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Staatliches&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Poppins:wght@500&family=Staatliches&display=swap");
+
 body {
-  background: #131417;
-  font-family: "Ubuntu";
-  color: white;
-  display: grid;
-  place-items: center;
-  padding: 2em;
+  background-color: #fbf7f0;
 }
-a {
-  color: white;
+
+.navbar {
+  background-color: #555555;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  pointer-events: none;
+}
+
+.navbar-nav {
+  font-family: "Ubuntu";
+  font-weight: 500;
+}
+
+body .navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+
+h2 {
+  font-family: "Ubuntu";
+}
+
+p {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+legend {
+  font-family: "Ubuntu";
+}
+
+.row {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover {
+  color: #555555;
+  font-weight: bold;
 }
