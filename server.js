@@ -64,7 +64,7 @@ app.get("/departments", (req, res) => {
     });
 });
 
-app.use((req, res) => {
+app.get("*", (req, res) => {
   res.status(404).sendFile(path.join(__dirname, "/views/404.html"));
 });
 
