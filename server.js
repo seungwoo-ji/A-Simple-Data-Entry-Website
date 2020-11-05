@@ -1,10 +1,10 @@
 /*********************************************************************************
- * WEB322 – Assignment 03
+ * WEB322 – Assignment 04
  * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
  * of this assignment has been copied manually or electronically from any other source
  * (including 3rd party web sites) or distributed to other students.
  *
- * Name: Seung Woo Ji Student ID: 116376195 Date: October 21, 2020
+ * Name: Seung Woo Ji Student ID: 116376195 Date: November 5, 2020
  *
  * Online (Heroku) Link: https://fierce-lake-12446.herokuapp.com/
  *
@@ -15,6 +15,7 @@ const app = express();
 const multer = require("multer");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const exphbs = require("express-handlebars");
 const path = require("path");
 const data = require("./data-service");
 
@@ -33,19 +34,56 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+app.engine(
+  ".hbs",
+  exphbs({
+    extname: ".hbs",
+    defaultLayout: "main",
+    helpers: {
+      navLink: function (url, options) {
+        return (
+          "<li" +
+          (url == app.locals.activeRoute ? ' class="active" ' : "") +
+          '><a href="' +
+          url +
+          '">' +
+          options.fn(this) +
+          "</a></li>"
+        );
+      },
+
+      equal: function (lvalue, rvalue, options) {
+        if (arguments.length < 3)
+          throw new Error("Handlebars Helper equal needs 2 parameters");
+        if (lvalue != rvalue) {
+          return options.inverse(this);
+        } else {
+          return options.fn(this);
+        }
+      },
+    },
+  })
+);
+app.set("view engine", ".hbs");
+
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function (req, res, next) {
+  let route = req.baseUrl + req.path;
+  app.locals.activeRoute = route == "/" ? "/" : route.replace(/\/$/, "");
+  next();
+});
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/home.html"));
+  res.render("home");
 });
 
 app.get("/about", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/about.html"));
+  res.render("about");
 });
 
 app.get("/employees/add", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/addEmployee.html"));
+  res.render("addEmployee");
 });
 
 app.post("/employees/add", (req, res) => {
@@ -54,8 +92,14 @@ app.post("/employees/add", (req, res) => {
   });
 });
 
+app.post("/employee/update", (req, res) => {
+  data.updateEmployee(req.body).then(() => {
+    res.redirect("/employees");
+  });
+});
+
 app.get("/images/add", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/addImage.html"));
+  res.render("addImage");
 });
 
 app.post("/images/add", upload.single("imageFile"), (req, res) => {
@@ -64,7 +108,7 @@ app.post("/images/add", upload.single("imageFile"), (req, res) => {
 
 app.get("/images", (req, res) => {
   fs.readdir("./public/images/uploaded", (err, items) => {
-    res.json({ images: items });
+    res.render("images", { images: items });
   });
 });
 
@@ -73,37 +117,37 @@ app.get("/employees", (req, res) => {
     data
       .getEmployeesByStatus(req.query.status)
       .then((emp) => {
-        res.json(emp);
+        res.render("employees", { employees: emp });
       })
       .catch((err) => {
-        res.json({ message: err });
+        res.render("employees", { message: "no results" });
       });
   } else if (req.query.department) {
     data
       .getEmployeesByDepartment(req.query.department)
       .then((emp) => {
-        res.json(emp);
+        res.render("employees", { employees: emp });
       })
       .catch((err) => {
-        res.json({ message: err });
+        res.render("employees", { message: "no results" });
       });
   } else if (req.query.manager) {
     data
       .getEmployeesByManager(req.query.manager)
       .then((emp) => {
-        res.json(emp);
+        res.render("employees", { employees: emp });
       })
       .catch((err) => {
-        res.json({ message: err });
+        res.render("employees", { message: "no results" });
       });
   } else {
     data
       .getAllEmployees()
       .then((emp) => {
-        res.json(emp);
+        res.render("employees", { employees: emp });
       })
       .catch((err) => {
-        res.json({ message: err });
+        res.render("employees", { message: "no results" });
       });
   }
 });
@@ -112,21 +156,10 @@ app.get("/employee/:employeeNum", (req, res) => {
   data
     .getEmployeeByNum(req.params.employeeNum)
     .then((emp) => {
-      res.json(emp);
+      res.render("employee", { employee: emp });
     })
     .catch((err) => {
-      res.json({ message: err });
-    });
-});
-
-app.get("/managers", (req, res) => {
-  data
-    .getManagers()
-    .then((mgr) => {
-      res.json(mgr);
-    })
-    .catch((err) => {
-      res.json({ message: err });
+      res.render("employee", { message: "no results" });
     });
 });
 
@@ -134,10 +167,10 @@ app.get("/departments", (req, res) => {
   data
     .getDepartments()
     .then((dept) => {
-      res.json(dept);
+      res.render("departments", { departments: dept });
     })
     .catch((err) => {
-      res.json({ message: err });
+      res.render("departments", { message: "no results" });
     });
 });
 

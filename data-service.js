@@ -45,6 +45,37 @@ module.exports.addEmployee = function (employeeData) {
   });
 };
 
+module.exports.updateEmployee = function (employeeData) {
+  return new Promise((resolve, reject) => {
+    var idx = employees.findIndex(
+      (emp) => emp.employeeNum === parseInt(employeeData.employeeNum)
+    );
+
+    if (idx !== -1) {
+      employees[idx].employeeNum = parseInt(employeeData.employeeNum);
+      employees[idx].firstName = employeeData.firstName;
+      employees[idx].lastName = employeeData.lastName;
+      employees[idx].email = employeeData.email;
+      employees[idx].SSN = employeeData.SSN;
+      employees[idx].addressStreet = employeeData.addressStreet;
+      employees[idx].addressCity = employeeData.addressCity;
+      employees[idx].addressState = employeeData.addressState;
+      employees[idx].addressPostal = employeeData.addressPostal;
+      employees[idx].maritalStatus = employeeData.maritalStatus;
+      employees[idx].isManager = employeeData.isManager === "on" ? true : false;
+      employees[idx].employeeManagerNum =
+        employeeData.employeeManagerNum === ""
+          ? null
+          : employeeData.employeeManagerNum;
+      employees[idx].status = employeeData.status;
+      employees[idx].department = employeeData.department;
+      employees[idx].hireDate = employeeData.hireDate;
+    }
+
+    resolve();
+  });
+};
+
 module.exports.getEmployeesByStatus = function (status) {
   return new Promise((resolve, reject) => {
     var employeesByStatus = employees.filter((emp) => emp.status === status);
@@ -97,11 +128,11 @@ module.exports.getAllEmployees = function () {
 
 module.exports.getEmployeeByNum = function (num) {
   return new Promise((resolve, reject) => {
-    var employeeByNum = employees.filter(
+    var employeeByNum = employees.find(
       (emp) => emp.employeeNum === parseInt(num)
     );
 
-    if (employeeByNum.length === 0) {
+    if (!employeeByNum) {
       reject("no results returned");
     }
 
